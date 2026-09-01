@@ -63,11 +63,14 @@ def load_artifacts():
 try:
     model, scaler, label_encoder, encoders, feature_columns, metrics = load_artifacts()
 except FileNotFoundError:
-    st.error(
-        "Model artifacts not found. Run `python train_model.py` once before "
-        "starting the app (this creates the model/ folder)."
-    )
-    st.stop()
+    with st.spinner(
+        "First-time setup: training the Random Forest model "
+        "(takes about 10-20 seconds)..."
+    ):
+        from train_model import train_and_save
+        train_and_save()
+    load_artifacts.clear()  # clear the cached loader so it re-reads the new files
+    model, scaler, label_encoder, encoders, feature_columns, metrics = load_artifacts()
 
 CATEGORICAL_COLS = ["protocol_type", "service", "flag"]
 

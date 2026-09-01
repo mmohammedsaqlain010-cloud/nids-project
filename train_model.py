@@ -70,7 +70,10 @@ def preprocess(df):
     return X_scaled, y, scaler, encoders, label_encoder, feature_columns
 
 
-def main():
+def train_and_save():
+    """Runs the full training pipeline and saves artifacts to model/.
+    Reusable both from the CLI (`python train_model.py`) and as an
+    automatic fallback from app.py if artifacts are missing."""
     print("Phase 1: Loading dataset (synthetic NIDS-style traffic)...")
     df = generate_synthetic_dataset()
 
@@ -157,7 +160,8 @@ def main():
         json.dump(metrics, f, indent=2)
 
     print("Done. Model artifacts saved in model/")
+    return metrics
 
 
 if __name__ == "__main__":
-    main()
+    train_and_save()
